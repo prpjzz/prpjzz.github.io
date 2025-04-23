@@ -1,0 +1,258 @@
+﻿@page "/"
+@using System.Collections.Generic
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand-container">
+                <a href="/" class="home-link router-link-active">
+                    <img src="/images/avatar.png" alt="Logo" class="logo" />
+                    <span class="site-name">Rum1ka's Home Page</span>
+                </a>
+            </div>
+            <div class="navbar-items-container">
+                <button class="toggle-dark-button" @onclick="ToggleDarkMode">
+                    <i class="@(IsDarkMode ? "fa fa-sun" : "fa fa-moon")"></i>
+                </button>
+                <a class="github-link" href="https://github.com/prpjzz" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page blog-home">
+        <main class="home" aria-labelledby="main-title" style="padding:0; max-width:100%;">
+            <div class="hero-info-wrapper">
+                <div class="hero-info" style="background-image: url('/images/bg.jpg');">
+                    <div class="hero-info-content">
+                        <h1 id="main-title" class="vp-blog-hero-title">
+                          Rum1ka's Home Page
+                        </h1>
+                        <p class="vp-blog-hero-description description">
+                            Be smart. Be studious.
+                        </p>
+                        <div class="social-media-wrapper">
+                            <div class="blog-info-wrapper">
+                                <img src="/images/avatar.jpg" class="vp-blogger-avatar" />
+                                <div class="blog-info-content">
+                                    <div class="blog-name">Rum1ka</div>
+                                    <div class="blog-description">Developer</div>
+                                </div>
+                            </div>
+                            <div class="social-medias">
+                                @foreach (var media in SocialMedias)
+                                {
+                                    <a href="@media.Link" class="social-media-item" target="_blank" rel="noopener noreferrer">
+                                        <i class="@media.Icon"></i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div class="scroll-down-indicator" @onclick="ScrollToContent">
+                            <i class="fa fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content" class="content-after-hero">
+                <div class="features" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+                    <div class="feature-wrapper">
+                        @foreach (var project in Projects)
+                        {
+                            <div class="feature" @onclick="() => NavigateToUrl(project.Link)">
+                                <div class="vp-card" style="cursor: pointer;">
+                                    <div class="vp-card-wrapper">
+                                        <div class="vp-card-header">
+                                            @if (project.Icon.StartsWith("fa"))
+                                            {
+                                                <i class="@project.Icon"></i>
+                                            }
+                                            else
+                                            {
+                                                <img src="@project.Icon" alt="@project.Name" class="project-icon" />
+                                            }
+                                            <h4>@project.Name</h4>
+                                        </div>
+                                        <div class="vp-card-content">
+                                            <p>@project.Description</p>
+                                        </div>
+                                        <div class="vp-card-footer">
+                                            <span class="vp-card-link-indicator">
+                                                <i class="fa fa-external-link-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(AboutMe))
+                {
+                    <div class="about-section" style="max-width: 1200px; margin: 3rem auto; padding: 2rem;">
+                        <h2>@(IsChinese ? "关于我" : "About Me")</h2>
+                        <div class="about-content">
+                            @((MarkupString)AboutMe)
+                        </div>
+                    </div>
+                }
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>The more we know, the more we realize how little we know.</p>
+                </div>
+                <div class="footer-right">
+                    <p>© @DateTime.Now.Year Rum1ka</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+@code {
+    private bool IsDarkMode { get; set; } = false;
+    private bool IsChinese { get; set; } = false;
+    private bool showLocaleDropdown { get; set; } = false;
+    private string AboutMe { get; set; } = "";
+
+    private class SocialMediaItem
+    {
+        public required string Name { get; set; }
+        public required string Icon { get; set; }
+        public required string Link { get; set; }
+    }
+
+    private class ProjectItem
+    {
+        public required string Icon { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public required string Link { get; set; }
+    }
+
+    private List<SocialMediaItem> SocialMedias = new List<SocialMediaItem>
+    {
+        new SocialMediaItem { Name = "GitHub", Icon = "fab fa-github", Link = "https://github.com/prpjzz" },
+        new SocialMediaItem { Name = "QQ", Icon = "fab fa-qq", Link = "http://qm.qq.com/cgi-bin/qm/qr?k=siBirJsednRlwlvNe8zoGJbRlO8gRsre" },
+        new SocialMediaItem { Name = "Discord", Icon = "fab fa-discord", Link = "https://discord.com/users/364242882485551114" },
+        new SocialMediaItem { Name = "Telegram", Icon = "fab fa-telegram", Link = "https://t.me/prpjzz" },
+        new SocialMediaItem { Name = "Email", Icon = "fa fa-envelope", Link = "mailto:i@irain.in" },
+    };
+
+    private List<ProjectItem> Projects = new List<ProjectItem>
+    {
+        new ProjectItem {
+            Icon = "fa-solid fa-blog",
+            Name = "Blog",
+            Description = "Always capturing moments",
+            Link = "https://blog.prpjzz.tech"
+        },
+        new ProjectItem {
+            Icon = "fab fa-github-alt",
+            Name = "Relic Serivce",
+            Description = "A Relic Toolkit for Genshin Impact, solving the Relic issue that's been around since the game's launch.",
+            Link = "https://github.com/prpjzz/RelicService"
+        },
+        new ProjectItem {
+            Icon = "fab fa-github-alt",
+            Name = "Snap Hutao",
+            Description = "A multifunctional open-source Genshin Impact toolkit",
+            Link = "https://github.com/DGP-Studio/Snap.Hutao"
+        },
+        new ProjectItem {
+            Icon = "fab fa-telegram",
+            Name = "My Telegram Channel",
+            Description = "Somewhere I share updates",
+            Link = "https://t.me/prpjzz"
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Parse the about.md content to HTML
+        AboutMe = @"
+<ul>
+<li>✨ ID: Rum1ka, prpjzz</li>
+<li>🌎 Location: Quy Nhon</li>
+<li>🏫 Student of QNU</li>
+<li>👨‍💻 Developer</li>
+<li>🎰 Gacha game Player</li>
+</ul>";
+
+        // Restore dark mode from localStorage if available
+        try
+        {
+            var savedMode = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "darkMode");
+            IsDarkMode = savedMode == "true";
+            if (IsDarkMode)
+            {
+                await JSRuntime.InvokeVoidAsync("document.documentElement.classList.add", "dark");
+            }
+        }
+        catch
+        {
+            // Handle exception or ignore if localStorage is not available
+        }
+    }
+
+    private async Task ToggleDarkMode()
+    {
+        IsDarkMode = !IsDarkMode;
+
+        try
+        {
+            if (IsDarkMode)
+            {
+                await JSRuntime.InvokeVoidAsync("document.documentElement.classList.add", "dark");
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("document.documentElement.classList.remove", "dark");
+            }
+
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "darkMode", IsDarkMode.ToString().ToLower());
+        }
+        catch
+        {
+            // Handle exception or ignore if localStorage is not available
+        }
+    }
+
+    private void ToggleLocaleDropdown()
+    {
+        showLocaleDropdown = !showLocaleDropdown;
+    }
+
+    private void NavigateToUrl(string url)
+    {
+        NavigationManager.NavigateTo(url, true);
+    }
+    
+    private async Task ScrollToContent()
+    {
+        await JSRuntime.InvokeVoidAsync("scrollToElementById", "content");
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("eval", @"
+                window.scrollToElementById = function(elementId) {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            ");
+        }
+    }
+}
