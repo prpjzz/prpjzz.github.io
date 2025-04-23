@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Rum1ka's Home Page</title>
+    <base href="/" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="BlazorPage.styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="description" content="Rum1ka's personal website">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" />
+    
+</head>
+<body>
+    <div id="app">
+        <div class="loading-container">
+            <div class="loading-wrapper">
+                <div class="loading-text">Loading...</div>
+                <div class="loading-progress">
+                    <div class="loading-progress-bar" id="blazor-loading-progress" style="width: 0%"></div>
+                </div>
+                <div class="loading-percentage" id="blazor-loading-percentage">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" style="display: none;">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Simulate error handling
+            window.addEventListener('error', function () {
+                document.getElementById('blazor-error-ui').style.display = 'block';
+            });
+
+            // Example: Hide loading screen after some time (simulate app load)
+            setTimeout(function () {
+                document.querySelector('.loading-container').style.display = 'none';
+            }, 3000); // Adjust time as needed
+        });
+    </script>
+    <script src="js/loading.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+</body>
+</html>
